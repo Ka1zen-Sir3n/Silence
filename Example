@@ -1,145 +1,89 @@
-local Silence = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/Ka1zen-Sir3n/Silence/main/Library"
-))()
+local Library = loadstring(game:HttpGet("YOUR_RAW_GITHUB_LINK"))()
 
-local window = Silence.new({
-    Title = "Silence Library",
-    Subtitle = "Function Showcase",
-    Theme = "Graphite",
-    Size = UDim2.fromOffset(620, 460),
-    Position = UDim2.new(0.5, -310, 0.5, -230),
+local Window = Library:CreateWindow({
+    Title = "Silence",
+    Size = UDim2.fromOffset(760, 480)
 })
 
-local uiTab    = window:CreateTab("UI Elements")
-local inputTab = window:CreateTab("Inputs")
-local sysTab   = window:CreateTab("System")
+-- Create Tabs
+local MainTab = Window:AddTab("Main")
+local VisualsTab = Window:AddTab("Visuals")
+local SettingsTab = Window:AddTab("Settings")
 
-window:Section(uiTab, "Section & Button")
-window:Button(uiTab, {
-    Text = "Example Button",
+-- Create Groupboxes (Left & Right)
+local MainLeft = Window:AddLeftGroupbox(MainTab, "Combat")
+local MainRight = Window:AddRightGroupbox(MainTab, "Player")
+local VisualsLeft = Window:AddLeftGroupbox(VisualsTab, "ESP Options")
+local SettingsLeft = Window:AddLeftGroupbox(SettingsTab, "Menu")
+
+-- Add Buttons
+Window:AddButton(MainLeft, {
+    Text = "Reset Character",
     Callback = function()
-        window:Notify({
-            Title = "Button Clicked",
-            Content = "This is the standard Button function.",
-            Color = window.Theme.Success,
-        })
-    end,
+        local char = game.Players.LocalPlayer.Character
+        if char then char:BreakJoints() end
+        Window:Notify({ Title = "Reset", Content = "Character has been reset.", Duration = 3 })
+    end
 })
 
-window:Section(uiTab, "Toggle")
-window:Toggle(uiTab, {
-    Text = "Example Toggle",
+-- Add Toggles (Using ID for easy access)
+local autoFarm = Window:AddToggle(MainLeft, "AutoFarm", {
+    Text = "Auto Farm",
+    Default = false,
+    Callback = function(state)
+        print("AutoFarm is now:", state)
+    end
+})
+
+-- You can change it later via the Toggles table:
+-- Library.Toggles.AutoFarm:SetValue(true)
+
+-- Add Sliders
+Window:AddSlider(MainLeft, "WalkSpeed", {
+    Text = "Walk Speed",
+    Min = 16,
+    Max = 200,
+    Default = 16,
+    Round = true,
+    Callback = function(value)
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = value
+        end
+    end
+})
+
+-- Add Dropdowns
+Window:AddDropdown(VisualsLeft, "ESPMode", {
+    Text = "ESP Mode",
+    Values = { "Box", "Name", "Tracer" },
+    Default = "Box",
+    Callback = function(selected)
+        print("ESP Mode set to:", selected)
+    end
+})
+
+-- Add Toggles to Visuals
+Window:AddToggle(VisualsLeft, "ShowFPS", {
+    Text = "Show FPS Counter",
     Default = true,
     Callback = function(state)
-        print("Toggle state:", state)
-    end,
+        -- Logic to show/hide FPS
+    end
 })
 
-window:Section(uiTab, "Notifications")
-window:Button(uiTab, {
-    Text = "Send Notification",
+-- Add a Notification Button
+Window:AddButton(SettingsLeft, {
+    Text = "Send Test Notification",
     Callback = function()
-        window:Notify({
-            Title = "Notification",
-            Content = "This shows the Notify function.",
-            Color = window.Theme.Accent,
-            Duration = 4,
-        })
+        Window:Notify({ Title = "Test", Content = "SilenceUI is working perfectly!" })
     end,
 })
 
-window:Section(inputTab, "Slider")
-window:Slider(inputTab, {
-    Text = "Example Slider",
-    Min = 0,
-    Max = 100,
-    Default = 50,
-    Round = true,
-    Callback = function(v)
-        print("Slider value:", v)
-    end,
-})
-
-window:Section(inputTab, "Textbox")
-window:Textbox(inputTab, {
-    Placeholder = "Type something here...",
-    Callback = function(text)
-        print("Textbox input:", text)
-    end,
-})
-
-window:Section(inputTab, "Dropdown")
-window:Dropdown(inputTab, {
-    Text = "Example Dropdown",
-    Items = { "Option 1", "Option 2", "Option 3" },
-    Default = "Option 1",
-    Callback = function(choice)
-        print("Dropdown selected:", choice)
-    end,
-})
-
-window:Section(inputTab, "Keybind")
-window:Keybind(inputTab, {
-    Text = "Example Keybind",
-    Default = Enum.KeyCode.RightShift,
-    Callback = function(key)
-        print("Keybind set to:", key.Name)
-    end,
-})
-
-window:Section(inputTab, "Color Picker")
-window:ColorPicker(inputTab, {
-    Text = "Example Color Picker",
-    Hue = 0.6,
-    Saturation = 0.8,
-    Value = 1,
-    Callback = function(color)
-        print("Color picked:", color)
-    end,
-})
-
-window:Section(sysTab, "Tab Switching")
-window:Button(sysTab, {
-    Text = "Select 'Inputs' Tab",
+-- Accessing values via the Options table
+Window:AddButton(SettingsLeft, {
+    Text = "Print Current WalkSpeed",
     Callback = function()
-        window:SelectTab(inputTab)
-    end,
-})
-
-window:Section(sysTab, "Search Filter")
-window:Textbox(sysTab, {
-    Placeholder = "Search components...",
-    Callback = function(query)
-        window:Filter(query)
-    end,
-})
-
-window:Section(sysTab, "Config Save/Load")
-window:Button(sysTab, {
-    Text = "Save Config",
-    Callback = function()
-        local success = window:SaveConfig()
-        if success then
-            window:Notify({ Title = "Saved", Content = "Config saved successfully.", Color = window.Theme.Success })
-        end
-    end,
-})
-window:Button(sysTab, {
-    Text = "Load Config",
-    Callback = function()
-        local data = window:LoadConfig()
-        if data then
-            window:Notify({ Title = "Loaded", Content = "Config loaded successfully.", Color = window.Theme.Success })
-        else
-            window:Notify({ Title = "Error", Content = "No config found.", Color = window.Theme.Danger })
-        end
-    end,
-})
-
-window:Section(sysTab, "Close Window")
-window:Button(sysTab, {
-    Text = "Destroy Window",
-    Callback = function()
-        window:Destroy()
-    end,
+        print("Current Speed:", Library.Options.WalkSpeed.Value)
+    end
 })
