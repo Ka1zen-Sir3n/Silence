@@ -1,44 +1,23 @@
-local Library = loadstring(game:HttpGet("YOUR_RAW_GITHUB_LINK"))()
-
 local Window = Library:CreateWindow({
-    Title = "Silence",
+    Title = "Silence UI",
     Size = UDim2.fromOffset(760, 480)
 })
 
--- Create Tabs
+-- Create the Tabs
 local MainTab = Window:AddTab("Main")
 local VisualsTab = Window:AddTab("Visuals")
 local SettingsTab = Window:AddTab("Settings")
 
--- Create Groupboxes (Left & Right)
-local MainLeft = Window:AddLeftGroupbox(MainTab, "Combat")
-local MainRight = Window:AddRightGroupbox(MainTab, "Player")
-local VisualsLeft = Window:AddLeftGroupbox(VisualsTab, "ESP Options")
-local SettingsLeft = Window:AddLeftGroupbox(SettingsTab, "Menu")
+-- Create the Groupboxes (Splits into left and right columns)
+local MainLeft = Window:AddLeftGroupbox(MainTab, "Player Mods")
+local MainRight = Window:AddRightGroupbox(MainTab, "Teleports")
+local VisualsLeft = Window:AddLeftGroupbox(VisualsTab, "ESP")
+local SettingsLeft = Window:AddLeftGroupbox(SettingsTab, "Config")
 
--- Add Buttons
-Window:AddButton(MainLeft, {
-    Text = "Reset Character",
-    Callback = function()
-        local char = game.Players.LocalPlayer.Character
-        if char then char:BreakJoints() end
-        Window:Notify({ Title = "Reset", Content = "Character has been reset.", Duration = 3 })
-    end
-})
+-- ==========================================
+-- MAIN TAB ELEMENTS
+-- ==========================================
 
--- Add Toggles (Using ID for easy access)
-local autoFarm = Window:AddToggle(MainLeft, "AutoFarm", {
-    Text = "Auto Farm",
-    Default = false,
-    Callback = function(state)
-        print("AutoFarm is now:", state)
-    end
-})
-
--- You can change it later via the Toggles table:
--- Library.Toggles.AutoFarm:SetValue(true)
-
--- Add Sliders
 Window:AddSlider(MainLeft, "WalkSpeed", {
     Text = "Walk Speed",
     Min = 16,
@@ -53,37 +32,82 @@ Window:AddSlider(MainLeft, "WalkSpeed", {
     end
 })
 
--- Add Dropdowns
-Window:AddDropdown(VisualsLeft, "ESPMode", {
-    Text = "ESP Mode",
-    Values = { "Box", "Name", "Tracer" },
-    Default = "Box",
-    Callback = function(selected)
-        print("ESP Mode set to:", selected)
+Window:AddSlider(MainLeft, "JumpPower", {
+    Text = "Jump Power",
+    Min = 50,
+    Max = 300,
+    Default = 50,
+    Round = true,
+    Callback = function(value)
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.JumpPower = value
+        end
     end
 })
 
--- Add Toggles to Visuals
-Window:AddToggle(VisualsLeft, "ShowFPS", {
-    Text = "Show FPS Counter",
+Window:AddToggle(MainLeft, "InfiniteJump", {
+    Text = "Infinite Jump",
+    Default = false,
+    Callback = function(state)
+        print("Infinite Jump:", state)
+    end
+})
+
+Window:AddButton(MainRight, {
+    Text = "Teleport to Spawn",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = CFrame.new(0, 10, 0)
+            Window:Notify({ Title = "Teleported", Content = "Moved to spawn location.", Duration = 3 })
+        end
+    end
+})
+
+-- ==========================================
+-- VISUALS TAB ELEMENTS
+-- ==========================================
+
+Window:AddToggle(VisualsLeft, "BoxESP", {
+    Text = "Box ESP",
     Default = true,
     Callback = function(state)
-        -- Logic to show/hide FPS
+        print("Box ESP:", state)
     end
 })
 
--- Add a Notification Button
-Window:AddButton(SettingsLeft, {
-    Text = "Send Test Notification",
-    Callback = function()
-        Window:Notify({ Title = "Test", Content = "SilenceUI is working perfectly!" })
-    end,
+Window:AddDropdown(VisualsLeft, "ESPColor", {
+    Text = "ESP Color",
+    Values = { "White", "Red", "Green", "Blue" },
+    Default = "White",
+    Callback = function(selected)
+        print("ESP Color set to:", selected)
+    end
 })
 
--- Accessing values via the Options table
+-- ==========================================
+-- SETTINGS TAB ELEMENTS
+-- ==========================================
+
 Window:AddButton(SettingsLeft, {
-    Text = "Print Current WalkSpeed",
+    Text = "Print Current Speed",
     Callback = function()
-        print("Current Speed:", Library.Options.WalkSpeed.Value)
+        -- Reading the slider value we set earlier via the Library.Options table
+        local currentSpeed = Library.Options.WalkSpeed.Value
+        Window:Notify({ 
+            Title = "Current Speed", 
+            Content = "Your WalkSpeed is " .. tostring(currentSpeed),
+            Duration = 4
+        })
+    end
+})
+
+Window:AddButton(SettingsLeft, {
+    Text = "Toggle Infinite Jump (Code)",
+    Callback = function()
+        -- Toggling the toggle via the Library.Toggles table
+        local currentState = Library.Toggles.InfiniteJump.Value
+        Library.Toggles.InfiniteJump:SetValue(not currentState)
     end
 })
