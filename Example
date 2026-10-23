@@ -1,4 +1,4 @@
-local Silence = loadstring(game:HttpGet("https://raw.githubusercontent.com/hxracan/lumen-ui/refs/heads/main/Lumen.lua"))()
+local Silence = loadstring(game:HttpGet("https://github.com/Ka1zen-Sir3n/Silence/blob/main/Library"))()
 
 local Hub = Silence.new({
     Name = "Silence UI library",
