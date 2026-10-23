@@ -3,212 +3,142 @@ local Silence = loadstring(game:HttpGet(
 ))()
 
 local window = Silence.new({
-    Title = "Silence",
-    Subtitle = "full demo",
+    Title = "Silence Library",
+    Subtitle = "Function Showcase",
     Theme = "Graphite",
     Size = UDim2.fromOffset(620, 460),
+    Position = UDim2.new(0.5, -310, 0.5, -230),
 })
 
-local general = window:CreateTab("General")
-local combat  = window:CreateTab("Combat")
-local visuals = window:CreateTab("Visuals")
-local config  = window:CreateTab("Config")
+local uiTab    = window:CreateTab("UI Elements")
+local inputTab = window:CreateTab("Inputs")
+local sysTab   = window:CreateTab("System")
 
-window:Section(general, "Overview")
-
-window:Button(general, {
-    Text = "Say Hello",
+window:Section(uiTab, "Section & Button")
+window:Button(uiTab, {
+    Text = "Example Button",
     Callback = function()
         window:Notify({
-            Title = "Hello",
-            Content = "You clicked the button.",
+            Title = "Button Clicked",
+            Content = "This is the standard Button function.",
             Color = window.Theme.Success,
-            Duration = 3,
         })
     end,
 })
 
-window:Toggle(general, {
-    Text = "Enable Feature",
+window:Section(uiTab, "Toggle")
+window:Toggle(uiTab, {
+    Text = "Example Toggle",
     Default = true,
     Callback = function(state)
-        print("[General] Enable ->", state)
+        print("Toggle state:", state)
     end,
 })
 
-window:Slider(general, {
-    Text = "Volume",
-    Min = 0,
-    Max = 100,
-    Default = 65,
-    Round = true,
-    Callback = function(v)
-        print("[General] Volume ->", v)
-    end,
-})
-
-window:Textbox(general, {
-    Placeholder = "Enter your name...",
-    Callback = function(text)
-        print("[General] Name ->", text)
-        window:Notify({
-            Title = "Name set",
-            Content = text ~= "" and text or "(empty)",
-            Color = window.Theme.Accent,
-        })
-    end,
-})
-
-window:Dropdown(general, {
-    Text = "Language",
-    Items = { "English", "Spanish", "French", "German", "Japanese" },
-    Default = "English",
-    Callback = function(choice)
-        print("[General] Language ->", choice)
-    end,
-})
-
-window:Section(combat, "Targeting")
-
-window:Dropdown(combat, {
-    Text = "Aim Part",
-    Items = { "Head", "Torso", "Nearest" },
-    Default = "Head",
-    Callback = function(part)
-        print("[Combat] Aim Part ->", part)
-    end,
-})
-
-window:Slider(combat, {
-    Text = "Aim Smoothness",
-    Min = 1,
-    Max = 20,
-    Default = 6,
-    Round = true,
-    Callback = function(v)
-        print("[Combat] Smoothness ->", v)
-    end,
-})
-
-window:Toggle(combat, {
-    Text = "Silent Aim",
-    Default = false,
-    Callback = function(s)
-        print("[Combat] Silent Aim ->", s)
-    end,
-})
-
-window:Toggle(combat, {
-    Text = "Auto Fire",
-    Default = false,
-    Callback = function(s)
-        print("[Combat] Auto Fire ->", s)
-    end,
-})
-
-window:Keybind(combat, {
-    Text = "Toggle Combat",
-    Default = Enum.KeyCode.RightShift,
-    Callback = function(key)
-        print("[Combat] Bind ->", key.Name)
-    end,
-})
-
-window:Section(visuals, "ESP")
-
-window:Toggle(visuals, {
-    Text = "Box ESP",
-    Default = true,
-    Callback = function(s)
-        print("[Visuals] Box ESP ->", s)
-    end,
-})
-
-window:Toggle(visuals, {
-    Text = "Name ESP",
-    Default = false,
-    Callback = function(s)
-        print("[Visuals] Name ESP ->", s)
-    end,
-})
-
-window:ColorPicker(visuals, {
-    Text = "ESP Color",
-    Hue = 0.6,
-    Saturation = 0.75,
-    Value = 1,
-    Callback = function(color)
-        print("[Visuals] Color ->", color)
-    end,
-})
-
-window:Slider(visuals, {
-    Text = "Max Distance",
-    Min = 50,
-    Max = 2000,
-    Default = 500,
-    Round = true,
-    Callback = function(d)
-        print("[Visuals] Distance ->", d)
-    end,
-})
-
-window:Section(config, "Persistence")
-
-window:Button(config, {
-    Text = "Save Config",
-    Callback = function()
-        local ok = window:SaveConfig()
-        window:Notify({
-            Title = "Saved",
-            Content = ok and "Config written to SilenceConfig.json" or "Save failed",
-            Color = ok and window.Theme.Success or window.Theme.Danger,
-        })
-    end,
-})
-
-window:Button(config, {
-    Text = "Load Config",
-    Callback = function()
-        local data = window:LoadConfig()
-        window:Notify({
-            Title = "Loaded",
-            Content = data and "Config applied." or "No config found.",
-            Color = data and window.Theme.Success or window.Theme.Danger,
-        })
-    end,
-})
-
-window:Textbox(config, {
-    Placeholder = "Search across all tabs...",
-    Callback = function(q)
-        window:Filter(q)
-    end,
-})
-
-window:Section(config, "Window")
-
-window:Button(config, {
-    Text = "Switch to Combat",
-    Callback = function()
-        window:SelectTab(combat)
-    end,
-})
-
-window:Button(config, {
-    Text = "Send Test Notification",
+window:Section(uiTab, "Notifications")
+window:Button(uiTab, {
+    Text = "Send Notification",
     Callback = function()
         window:Notify({
-            Title = "Test",
-            Content = "This is a notification.",
+            Title = "Notification",
+            Content = "This shows the Notify function.",
             Color = window.Theme.Accent,
             Duration = 4,
         })
     end,
 })
 
-window:Button(config, {
-    Text = "Close Window",
+window:Section(inputTab, "Slider")
+window:Slider(inputTab, {
+    Text = "Example Slider",
+    Min = 0,
+    Max = 100,
+    Default = 50,
+    Round = true,
+    Callback = function(v)
+        print("Slider value:", v)
+    end,
+})
+
+window:Section(inputTab, "Textbox")
+window:Textbox(inputTab, {
+    Placeholder = "Type something here...",
+    Callback = function(text)
+        print("Textbox input:", text)
+    end,
+})
+
+window:Section(inputTab, "Dropdown")
+window:Dropdown(inputTab, {
+    Text = "Example Dropdown",
+    Items = { "Option 1", "Option 2", "Option 3" },
+    Default = "Option 1",
+    Callback = function(choice)
+        print("Dropdown selected:", choice)
+    end,
+})
+
+window:Section(inputTab, "Keybind")
+window:Keybind(inputTab, {
+    Text = "Example Keybind",
+    Default = Enum.KeyCode.RightShift,
+    Callback = function(key)
+        print("Keybind set to:", key.Name)
+    end,
+})
+
+window:Section(inputTab, "Color Picker")
+window:ColorPicker(inputTab, {
+    Text = "Example Color Picker",
+    Hue = 0.6,
+    Saturation = 0.8,
+    Value = 1,
+    Callback = function(color)
+        print("Color picked:", color)
+    end,
+})
+
+window:Section(sysTab, "Tab Switching")
+window:Button(sysTab, {
+    Text = "Select 'Inputs' Tab",
+    Callback = function()
+        window:SelectTab(inputTab)
+    end,
+})
+
+window:Section(sysTab, "Search Filter")
+window:Textbox(sysTab, {
+    Placeholder = "Search components...",
+    Callback = function(query)
+        window:Filter(query)
+    end,
+})
+
+window:Section(sysTab, "Config Save/Load")
+window:Button(sysTab, {
+    Text = "Save Config",
+    Callback = function()
+        local success = window:SaveConfig()
+        if success then
+            window:Notify({ Title = "Saved", Content = "Config saved successfully.", Color = window.Theme.Success })
+        end
+    end,
+})
+window:Button(sysTab, {
+    Text = "Load Config",
+    Callback = function()
+        local data = window:LoadConfig()
+        if data then
+            window:Notify({ Title = "Loaded", Content = "Config loaded successfully.", Color = window.Theme.Success })
+        else
+            window:Notify({ Title = "Error", Content = "No config found.", Color = window.Theme.Danger })
+        end
+    end,
+})
+
+window:Section(sysTab, "Close Window")
+window:Button(sysTab, {
+    Text = "Destroy Window",
     Callback = function()
         window:Destroy()
     end,
