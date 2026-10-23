@@ -1,4 +1,6 @@
-local Silence = require(path.to.SilenceUI)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Silence = require(ReplicatedStorage:WaitForChild("SilenceUI"))
 
 local window = Silence.new({
     Title = "Silence",
