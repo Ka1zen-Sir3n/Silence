@@ -1,13 +1,12 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local Silence = require(ReplicatedStorage:WaitForChild("SilenceUI"))
+local Silence = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Ka1zen-Sir3n/Silence/main/Library"
+))()
 
 local window = Silence.new({
     Title = "Silence",
-    Subtitle = "full component demo",
+    Subtitle = "full demo",
     Theme = "Graphite",
     Size = UDim2.fromOffset(620, 460),
-    Position = UDim2.new(0.5, -310, 0.5, -230),
 })
 
 local general = window:CreateTab("General")
@@ -33,7 +32,7 @@ window:Toggle(general, {
     Text = "Enable Feature",
     Default = true,
     Callback = function(state)
-        print("[General] Enable Feature ->", state)
+        print("[General] Enable ->", state)
     end,
 })
 
@@ -43,8 +42,8 @@ window:Slider(general, {
     Max = 100,
     Default = 65,
     Round = true,
-    Callback = function(value)
-        print("[General] Volume ->", value)
+    Callback = function(v)
+        print("[General] Volume ->", v)
     end,
 })
 
@@ -190,7 +189,7 @@ window:Textbox(config, {
 window:Section(config, "Window")
 
 window:Button(config, {
-    Text = "Manual Tab Switch (Combat)",
+    Text = "Switch to Combat",
     Callback = function()
         window:SelectTab(combat)
     end,
